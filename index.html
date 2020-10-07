@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <!-- css -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+</head>
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <span class="navbar-brand mb-0 h1">Weather App</span>
+      </nav>
+</header>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <nav class="navbar navbar-light bg-light">
+                    <form class="form-inline">
+                      <input class="form-control mr-sm-2" id="search" placeholder="Search" aria-label="Search">
+                      <button class="btn btn-outline-success my-2 my-sm-0" id="btn" type="submit">Search</button>
+                    </form>
+                  </nav>
+                  <ul class="list-group">
+                  </ul>
+            </div>
+            <div class="col=md-8" id="dayW">
+
+            </div>
+        </div>
+    </div>
+<script>
+$( document ).ready(function() {
+
+    var cities = [];
+
+    $("#btn").on("click", function(event){
+        event.preventDefault();
+        var userInput = $("#search").val();
+        newBtn = $("<button>");
+        newBtn.attr("class", "list-group-item list-group-item-action");
+        newBtn.attr("type", "button");
+        newBtn.attr("id", "btnLi");
+        newBtn.text(userInput);
+        $(".list-group").append(newBtn);
+        cities.push(userInput);
+        console.log(cities);
+        displayWeather(userInput);
+        cities = [];
+        });
+
+     $(document).on("click", ".list-group-item", activeBtn);
+
+    function activeBtn(){
+        $(".list-group-item").attr("class", "list-group-item list-group-item-action");
+        $(this).attr("class", "list-group-item list-group-item-action active");
+        displayWeather($(this).text());
+        }
+
+    function displayWeather(city){    
+        var APIKey = "0802b43ec08a1502c85c76efb5c718a5";
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=" + APIKey;
+        // We then created an AJAX call
+        $.ajax({
+        url: queryURL,
+        method: "GET"
+        }).then(function(response) {
+        console.log(response);
+        console.log(response.main.temp);
+        console.log(response.main.humidity);
+        console.log(response.wind.speed);
+
+        var cityH1=$("<h1>").text(city);
+        var temp=$("<h4>").text(response.main.temp);
+        var humidity=$("<h4>").text(response.main.humidity);
+        var wind=$("<h4>").text(response.wind.speed);
+
+        $("#dayW").empty();
+
+        $("#dayW").append(cityH1);
+        $("#dayW").append(temp);
+        $("#dayW").append(humidity);
+        $("#dayW").append(wind);
+
+        
+
+        });
+        } 
+    }  
+);
+
+</script>
+    
+</body>
+</html>
