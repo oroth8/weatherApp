@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <!-- Jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 </head>
 <header>
@@ -94,8 +95,16 @@ $( document ).ready(function() {
         var tempK = response.main.temp;
         var tempCalc = ((tempK - 273.15) * 9/5 + 32).toFixed(0);
 
+        var tempKH = response.main.temp_max;
+        var tempCalcH = ((tempK - 273.15) * 9/5 + 32).toFixed(0);
+
+        var tempKL = response.main.temp_min;
+        var tempCalcL = ((tempK - 273.15) * 9/5 + 32).toFixed(0);
+
         var cityH1=$("<h1>").text(city);
-        var temp=$("<h4>").text("Temperature: "+tempCalc+"F");
+        var temp=$("<h4>").text("Current Temperature: "+tempCalc+"F");
+        var tempH=$("<h4>").text("High: "+tempCalc+"F");
+        var tempL=$("<h4>").text("Low: "+tempCalc+"F");
         var humidity=$("<h4>").text("Humidity: "+response.main.humidity+"%");
         var wind=$("<h4>").text("Wind Speed: "+response.wind.speed+" MPH");
 
@@ -104,6 +113,8 @@ $( document ).ready(function() {
         displayDate();
         $("#dayW").append(cityH1);
         $("#dayW").append(temp);
+        $("#dayW").append(tempH);
+        $("#dayW").append(tempL);
         $("#dayW").append(humidity);
         $("#dayW").append(wind);
 
@@ -124,13 +135,11 @@ $( document ).ready(function() {
             weekday[4] = "Thursday";
             weekday[5] = "Friday";
             weekday[6] = "Saturday";
-        for (i = 0; i < 14; i++) {
-    console.log(fiveDay.getDay() + 1 + i) % 7;
-    }
 
-        var getDay = weekday[fiveDay.getDay()];
-        console.log(getDay);
-
+        // console.log(fiveDay.getDay());
+        // for(var i=0;i<5;i++){
+        //     if(fiveDay.getDay())
+        // }
 
         var APIKey = "0802b43ec08a1502c85c76efb5c718a5";
         var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&appid=" + APIKey;
@@ -146,11 +155,13 @@ $( document ).ready(function() {
             var tempK = response.list[i].main.temp;
             var tempCalc = ((tempK - 273.15) * 9/5 + 32).toFixed(0);
 
-            var temp = $("<h6>").text(tempCalc+" F");
+            var temp = $("<h6>").text("Temp: "+tempCalc+" F"); 
             var humidity = $("<h6>").text(response.list[i].main.humidity+" %");
             var wind = $("<h6>").text(response.list[i].wind.speed+" MPH");
 
         $("#box"+dayCount).empty();    
+
+        display5Days(dayCount);        
 
         $("#box"+dayCount).append(temp);
         $("#box"+dayCount).append(humidity);
@@ -167,9 +178,34 @@ $( document ).ready(function() {
     var dateH2 = $("<h2>");
     dateH2.text("Today's Date: "+(fullDate.getMonth()+1)+"/"+(fullDate.getDate())+"/"+ (fullDate.getFullYear()));
     $("#dayW").append(dateH2);
+
+    
     }
-    } 
-);
+
+    function display5Days(day){
+        let days = [];
+        let daysRequired = 7
+
+        for (let i = 1; i <= daysRequired; i++) {
+            // 'dddd, Do MMMM YYYY'
+         days.push( moment().add(i, 'days').format('dddd, Do') )
+            }
+        $("#box"+day).append(days[day]);
+            console.log(days)
+    }
+
+    $("#btn").on("click", function(){
+        var lastInput = $("#search").val().toUpperCase().trim();
+        localStorage.setItem("LastSearch", lastInput);
+    })
+
+    function displayLastSearch(){
+        lastSearch = localStorage.getItem("LastSearch");
+        $("#search").val(lastSearch);
+    }
+    displayLastSearch();
+
+    });
 
 </script>
     
