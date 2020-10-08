@@ -6,6 +6,7 @@
     <title>Weather App</title>
     <!-- css -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/style.css">
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
@@ -31,9 +32,19 @@
                   <ul class="list-group">
                   </ul>
             </div>
-            <div class="col=md-8" id="dayW">
-
+            <div class="col-md-8">
+                <div id="dayW">
+                    <h2 id="date"></h2>
+                </div>
+                <div class="row" id="forecastContainer">
+                    <div class="col-md-2 box" id="box0"></div>
+                    <div class="col-md-2 box" id="box1"></div>
+                    <div class="col-md-2 box" id="box2"></div>
+                    <div class="col-md-2 box" id="box3"></div>
+                    <div class="col-md-2 box" id="box4"></div>
+                </div>
             </div>
+            
         </div>
     </div>
 <script>
@@ -43,7 +54,7 @@ $( document ).ready(function() {
 
     $("#btn").on("click", function(event){
         event.preventDefault();
-        var userInput = $("#search").val();
+        var userInput = $("#search").val().toUpperCase().trim();
         newBtn = $("<button>");
         newBtn.attr("class", "list-group-item list-group-item-action");
         newBtn.attr("type", "button");
@@ -53,6 +64,8 @@ $( document ).ready(function() {
         cities.push(userInput);
         console.log(cities);
         displayWeather(userInput);
+        displayForecast(userInput);
+        
         cities = [];
         });
 
@@ -62,9 +75,10 @@ $( document ).ready(function() {
         $(".list-group-item").attr("class", "list-group-item list-group-item-action");
         $(this).attr("class", "list-group-item list-group-item-action active");
         displayWeather($(this).text());
+        displayForecast($(this).text());
         }
 
-    function displayWeather(city){    
+    function displayWeather(city){
         var APIKey = "0802b43ec08a1502c85c76efb5c718a5";
         var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=" + APIKey;
         // We then created an AJAX call
@@ -77,13 +91,17 @@ $( document ).ready(function() {
         console.log(response.main.humidity);
         console.log(response.wind.speed);
 
+        var tempK = response.main.temp;
+        var tempCalc = ((tempK - 273.15) * 9/5 + 32).toFixed(0);
+
         var cityH1=$("<h1>").text(city);
-        var temp=$("<h4>").text(response.main.temp);
-        var humidity=$("<h4>").text(response.main.humidity);
-        var wind=$("<h4>").text(response.wind.speed);
+        var temp=$("<h4>").text("Temperature: "+tempCalc+"F");
+        var humidity=$("<h4>").text("Humidity: "+response.main.humidity+"%");
+        var wind=$("<h4>").text("Wind Speed: "+response.wind.speed+" MPH");
 
         $("#dayW").empty();
 
+        displayDate();
         $("#dayW").append(cityH1);
         $("#dayW").append(temp);
         $("#dayW").append(humidity);
@@ -92,8 +110,65 @@ $( document ).ready(function() {
         
 
         });
-        } 
-    }  
+        }
+    function displayForecast(city){  
+        $("#forecastContainer").attr("style", "visibility: visible;");
+        var fiveDay = new Date();
+        var month = fiveDay.getMonth()+1;
+        var today = fiveDay.getDate();
+        var weekday = new Array(7);
+            weekday[0] = "Sunday";
+            weekday[1] = "Monday";
+            weekday[2] = "Tuesday";
+            weekday[3] = "Wednesday";
+            weekday[4] = "Thursday";
+            weekday[5] = "Friday";
+            weekday[6] = "Saturday";
+        for (i = 0; i < 14; i++) {
+    console.log(fiveDay.getDay() + 1 + i) % 7;
+    }
+
+        var getDay = weekday[fiveDay.getDay()];
+        console.log(getDay);
+
+
+        var APIKey = "0802b43ec08a1502c85c76efb5c718a5";
+        var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&appid=" + APIKey;
+        // We then created an AJAX call
+        $.ajax({
+        url: queryURL,
+        method: "GET"
+        }).then(function(response) {
+        console.log(response);
+        var dayCount = 0;
+        for(var i=0;i<response.list.length;i+=4){
+
+            var tempK = response.list[i].main.temp;
+            var tempCalc = ((tempK - 273.15) * 9/5 + 32).toFixed(0);
+
+            var temp = $("<h6>").text(tempCalc+" F");
+            var humidity = $("<h6>").text(response.list[i].main.humidity+" %");
+            var wind = $("<h6>").text(response.list[i].wind.speed+" MPH");
+
+        $("#box"+dayCount).empty();    
+
+        $("#box"+dayCount).append(temp);
+        $("#box"+dayCount).append(humidity);
+        $("#box"+dayCount).append(wind);
+        dayCount++;
+        }
+
+        })}
+        
+
+    function displayDate(){
+    var fullDate = new Date();
+    console.log(fullDate.getMonth());
+    var dateH2 = $("<h2>");
+    dateH2.text("Today's Date: "+(fullDate.getMonth()+1)+"/"+(fullDate.getDate())+"/"+ (fullDate.getFullYear()));
+    $("#dayW").append(dateH2);
+    }
+    } 
 );
 
 </script>
