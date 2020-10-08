@@ -225,13 +225,13 @@ $( document ).ready(function() {
             uvDisplay = $("<h1 id=uv-val>").text("UV Index: "+uvIndex);
             $("#UV").append(uvDisplay);
 
-            if(uvIndex<=2){
+            if(uvIndex<=4){
                 $("#uv-val").attr("style", "color: #28a745;");
             }
-            else if(uvIndex>2 && uvIndex<=5){
+            else if(uvIndex>4 && uvIndex<=7){
                 $("#uv-val").attr("style", "color: #ffc107;");
             }
-            else if(uvIndex>5){
+            else if(uvIndex>7){
                 $("#uv-val").attr("style", "color: #dc3545;");
             }
             
