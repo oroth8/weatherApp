@@ -101,7 +101,7 @@ $(document).ready(function () {
                 $("#box" + dayCount).append(humidity);
                 $("#box" + dayCount).append(wind);
 
-                displayIcon (dayCount, response.list[i].weather[0].description);
+                displayIcon(dayCount, response.list[i].weather[0].description);
 
                 dayCount++;
             }
@@ -168,42 +168,34 @@ $(document).ready(function () {
             }
         });
     }
-    function displayIcon (boxNum, code){
-        iconDiv = $("<div id=icon><img id=wicon"+boxNum+" src= alt=Weather icon></div>");
-        $("#box"+boxNum).append(iconDiv);
+    function displayIcon(boxNum, code) {
+        iconDiv = $("<div id=icon><img id=wicon" + boxNum + " src= alt=Weather icon></div>");
+        $("#box" + boxNum).append(iconDiv);
 
         var iconCode;
 
-        if(code=="clear sky"){
-            iconCode="01d";
-        }
-        else if (code=="few clouds"){
-            iconCode="02d";
-        }
-        else if (code=="scattered clouds"){
-            iconCode="03d";
-        }
-        else if (code=="broken clouds"){
-            iconCode="04d";
-        }
-        else if (code=="shower rain"){
-            iconCode="09d";
-        }
-        else if (code=="rain"){
-            iconCode="10d";
-        }
-        else if (code=="thunderstorm"){
-            iconCode="11d";
-        }
-        else if (code=="snow"){
-            iconCode="13d";
-        }
-        else{
-            iconCode="50d"
+        if (code == "clear sky") {
+            iconCode = "01d";
+        } else if (code == "few clouds") {
+            iconCode = "02d";
+        } else if (code == "scattered clouds") {
+            iconCode = "03d";
+        } else if (code == "broken clouds") {
+            iconCode = "04d";
+        } else if (code == "shower rain") {
+            iconCode = "09d";
+        } else if (code == "rain") {
+            iconCode = "10d";
+        } else if (code == "thunderstorm") {
+            iconCode = "11d";
+        } else if (code == "snow") {
+            iconCode = "13d";
+        } else {
+            iconCode = "50d"
         }
 
         var iconurl = "http://openweathermap.org/img/w/" + iconCode + ".png";
 
-        $('#wicon'+boxNum).attr('src', iconurl);
+        $('#wicon' + boxNum).attr('src', iconurl);
     }
 });
