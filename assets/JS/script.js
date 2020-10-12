@@ -80,7 +80,7 @@ $(document).ready(function () {
         weekday[6] = "Saturday";
 
         var APIKey = "0802b43ec08a1502c85c76efb5c718a5";
-        var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
+        var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
         // We then created an AJAX call
         $.ajax({url: queryURL, method: "GET"}).then(function (response) {
             var dayCount = 0;
@@ -148,7 +148,7 @@ $(document).ready(function () {
 
     function displayUV(lon, lat) {
         var APIKey = "0802b43ec08a1502c85c76efb5c718a5";
-        var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey;
+        var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey;
         // We then created an AJAX call
         $.ajax({url: queryURL, method: "GET"}).then(function (response) {
 
@@ -194,7 +194,7 @@ $(document).ready(function () {
             iconCode = "50d"
         }
 
-        var iconurl = "http://openweathermap.org/img/w/" + iconCode + ".png";
+        var iconurl = "https://openweathermap.org/img/w/" + iconCode + ".png";
 
         $('#wicon' + boxNum).attr('src', iconurl);
     }
